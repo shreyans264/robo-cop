@@ -23,6 +23,8 @@ REQUIRED
 
 
 Instructions
+>add username and password in gitDiff.php file in createComment function
+
 >create a public access to this service
 >in github got to the repository to add hook
 >goto settings-->Webhooks & Services-->click on Add Webhook
@@ -30,4 +32,6 @@ Instructions
 >set content type to application/x-www-form-urlencoded
 >select the triggers you want to send payload for
 >click Add webhook
+
+
 
