@@ -2,7 +2,7 @@
 # robo-cop
 
 
-Robo-cop for practo technologies Pvt. Ltd.
+Robo-cop a bot that gaurds your github repositories
 
 scans the DIFF files on pull_request and comments on the problems if present.
 currently scans the js files for syntax errors.
