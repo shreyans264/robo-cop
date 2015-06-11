@@ -17,9 +17,9 @@ used github-php-client
 
 
 REQUIRED
->PHP
->git
->jshint
+->PHP
+->git
+->jshint
 
 
 Instructions

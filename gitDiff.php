@@ -1,8 +1,4 @@
 <?php
-$mainDir = getcwd();
-$repository = "";
-$owner = "";
-$branch = "";
 
 function scanForFiles($string)
 {
@@ -22,15 +18,11 @@ function scanForFiles($string)
 	return $fileList;
 }
 
-function createComment($msg,$line,$filename) {
+function createComment($msg, $line, $filename, $owner, $repository, $number, $id) {
 	echo $msg . " : " . $line . " : " . $filename;
 	require(__DIR__ . '/github-php-client/client/GitHubClient.php');
 	$username='';
 	$password='';
-	$owner = "";
-	$repository = "";
-	$number =2;
-	$id = "";
 	$filename = str_replace("\ "," ", $filename);
 	$client = new GitHubClient();
 	$client->setCredentials($username, $password);
@@ -38,7 +30,7 @@ function createComment($msg,$line,$filename) {
 
 }
 
-function updateLog($report, $fileName, $fileType) {
+function updateLog($report, $fileName, $fileType, $owner, $repository, $number, $id) {
 	echo $report;
 	switch ($fileType) {
 		case "php":
@@ -80,34 +72,57 @@ function updateLog($report, $fileName, $fileType) {
 
 }
 
+function scanErrors($load)
+{
+	$mainDir = getcwd();
+	$repository = $load["pull_request"]["head"]["repo"]["name"];
+	$owner = $load["pull_request"]["head"]["repo"]["owner"]["login"];
+	$branch = $load["pull_request"]["head"]["ref"];
+	$number = $load["number"];
+	$id = $load["pull_request"]["head"]["sha"];
+	shell_exec("git clone git@github.com:" . $owner . "/" . $repository . ".git");
+	chdir($mainDir . "/" . $repository);
+	shell_exec("git checkout master");
+	shell_exec("git pull");															
+	shell_exec("git checkout " . $branch);
+	if($payload["action"] == "synchronize") 
+		$theDiff = shell_exec("git diff HEAD^ HEAD");
+	elseif($payload["action"] == "opened" || $payload["action"] == "reopened")
+		$theDiff = shell_exec("git diff master " . $branch);
+	$theList = scanForFiles($theDiff);
+	foreach($theList as $x) {
+		if(substr($x,-3) == ".js") {
+			$errReport = shell_exec("jshint " . $x);
+			updateLog($errReport, $x, "js",  $owner, $repository, $number, $id);
+		}
+		/*elseif(substr($x, -4) == ".php") {
+			//echo "php file here \n";
+			$errReport = shell_exec("php -l " . $x);
+			updateLog($errReport, $x, "php",  $owner, $repository, $number, $id);
+		}*/
 
-
-
-
-shell_exec("git clone git@github.com:" . $owner . "/" . $repository . ".git");
-chdir($mainDir . "/" . $repository);
-shell_exec("git checkout master");
-shell_exec("git pull");															
-shell_exec("git checkout " . $branch);
-if($payload["action"] == "synchronize") 
-	$theDiff = shell_exec("git diff HEAD^ HEAD");
-elseif($payload["action"] == "opened")
-	$theDiff = shell_exec("git diff master " . $branch);
-$theList = scanForFiles($theDiff);
-foreach($theList as $x) {
-	if(substr($x,-3) == ".js") {
-		$errReport = shell_exec("jshint " . $x);
-		updateLog($errReport, $x, "js");
 	}
-	/*elseif(substr($x, -4) == ".php") {
-		//echo "php file here \n";
-		$errReport = shell_exec("php -l " . $x);
-		updateLog($errReport, $x, "php");
-	}*/
+	chdir($mainDir);
+	shell_exec("rm -rf " . $repository);
 
 }
 
-chdir($mainDir);
-shell_exec("rm -rf " . $repository);
+// initial part
+
+$jsonpayload = $_POST["payload"];
+
+if(is_null($jsonpayload)) {
+	echo "Invalid Request\n";
+}
+else {
+	$payload = json_decode($jsonpayload,true);
+	if(array_key_exists("pull_request", $payload)) // check for Pull_request
+	{
+		scanErrors($payload);
+	}
+	
+}
+
+
 
 ?>
