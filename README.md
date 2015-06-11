@@ -19,7 +19,9 @@ used github-php-client
 
 REQUIRED
 >PHP
+
 >git
+
 >jshint
 
 
