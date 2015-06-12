@@ -1,9 +1,10 @@
 <?php
-class grabDataFromPayload()
+class grabDataFromPayload
 {
 	private function getPullData($load)
 	{
 		return array(
+			"event_type" = "pull",
 			"repository" = $load["pull_request"]["head"]["repo"]["name"],
 			"owner" = $load["pull_request"]["head"]["repo"]["owner"]["login"],
 			"branch" = $load["pull_request"]["head"]["ref"],
@@ -17,6 +18,7 @@ class grabDataFromPayload()
 	private function getPushData($load)
 	{
 		return array(
+			"event_type" = "push",
 			"repository" = $load["repository"]["name"],
 			"owner" = $load["repository"]["owner"]["name"],
 			"branch" = substr($load["ref"], 11),
@@ -30,11 +32,11 @@ class grabDataFromPayload()
 	{
 		if(array_key_exists("pull_request", $payload))
 		{
-			return getPullData($payload);
+			return $this->getPullData($payload);
 		}
 		elseif(array_key_exists("commits", $payload))
 		{
-			return getPushData($payload);
+			return $this->getPushData($payload);
 		}
 		else
 		{

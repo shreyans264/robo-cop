@@ -1,6 +1,6 @@
 <?php
 
-class checkRepo()
+class checkRepo
 {
 	public function checkRepo($owner,$repo)
 	{

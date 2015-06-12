@@ -1,7 +1,8 @@
 <?php
-
-class linter() 
+require(__DIR__ . '/../createComment.php');
+class linter
 {
+	private $comment = new createComment();
 	private function scanForFiles($string)
 	{
 		$fileList = array();
@@ -20,19 +21,9 @@ class linter()
 		return $fileList;
 	}
 
-	private function createComment($msg, $line, $filename, $owner, $repository, $number, $id) {
-		echo $msg . " : " . $line . " : " . $filename;
-		require(__DIR__ . '/github-php-client/client/GitHubClient.php');
-		$config = include "../config.php";	
-		$filename = str_replace("\ "," ", $filename);
-		$client = new GitHubClient();
-		$client->setCredentials($config["username"], $config["password"]);
-		$commentTry=$client->pulls->comments->createComment($owner, $repository, $number, $msg, intval($line), $id, $filename);
-
-	}
-
 	private function updateLog($report, $fileName, $fileType, $owner, $repository, $number, $id) {
 		echo $report;
+
 		switch ($fileType) {
 			case "php":
 				$pos = strpos($report, "PHP Parse error:");
@@ -45,7 +36,7 @@ class linter()
 						$lineNoPos += 9;
 						$lineNoEndPos = strpos($report, " ",$lineNoPos);
 						$lineNo = substr($report,$lineNoPos,$lineNoEndPos-$lineNoPos);
-						createComment($errorMsg,$lineNo,$fileName);
+						$this->comment->createComment($errorMsg,$lineNo,$fileName);
 						$pos = strpos($report, "PHP Parse error:",$lineNoEndPos);
 					}
 				}
@@ -61,7 +52,7 @@ class linter()
 						$errPos += 2;
 						$errEndPos = strpos($report, ".",$errPos);
 						$errorMsg = substr($report,$errPos,$errEndPos-$errPos);
-						createComment($errorMsg,$lineNo,$fileName);
+						$this->comment->createComment($errorMsg,$lineNo,$fileName);
 						$pos = strpos($report, ".js: line ",$errEndPos);
 					}
 				}
@@ -86,11 +77,11 @@ class linter()
 			$theDiff = shell_exec("git diff HEAD^ HEAD");
 		elseif($payload["action"] == "opened" || $payload["action"] == "reopened")
 			$theDiff = shell_exec("git diff master " . $branch);
-		$theList = scanForFiles($theDiff);
+		$theList = $this->scanForFiles($theDiff);
 		foreach($theList as $x) {
 			if(substr($x,-3) == ".js") {
 				$errReport = shell_exec("jshint " . $x);
-				updateLog($errReport, $x, "js",  $owner, $repository, $number, $id);
+				$this->updateLog($errReport, $x, "js",  $owner, $repository, $number, $id);
 			}
 			/*elseif(substr($x, -4) == ".php") {
 				//echo "php file here \n";
