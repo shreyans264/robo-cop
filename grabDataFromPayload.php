@@ -4,7 +4,7 @@ class grabDataFromPayload
 	private function getPullData($load)
 	{
 		return array(
-			"event_type" = "pull",
+			"event_type" = "pull_request",
 			"repository" = $load["pull_request"]["head"]["repo"]["name"],
 			"owner" = $load["pull_request"]["head"]["repo"]["owner"]["login"],
 			"branch" = $load["pull_request"]["head"]["ref"],
@@ -24,7 +24,10 @@ class grabDataFromPayload
 			"branch" = substr($load["ref"], 11),
 			"forced" = $load["forced"],
 			"id" = $load["after"],
-			"prevId" = $load["before"]
+			"prevId" = $load["before"],
+			"added" = $load["head_commit"]["added"],
+			"removed" = $load["head_commit"]["removed"],
+			"modified" = $load["head_commit"]["modified"]
 			);
 	}
 
@@ -40,7 +43,7 @@ class grabDataFromPayload
 		}
 		else
 		{
-			return array();
+			return array("event_type"="none");
 		}
 	}
 }

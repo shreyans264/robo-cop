@@ -19,12 +19,9 @@ class cssChecker
 			    	{
 			    		echo $lineNo;
 			    		echo "\n";
-			    		$this->comment->createComment("Carefully use !important",$lineNo,$file);
-			    		//print out not important present
+			    		$this->comment->createComment("Try to avoid !important",$lineNo,$file, $owner, $repository, $number, $id);
 			    	}
-
 			    }
-
 			    fclose($handle);
 			}
 			else
@@ -34,9 +31,9 @@ class cssChecker
 		}
 	}
 
-	public function cssCheck($files) 
+	public function cssCheck($files,$load) 
 	{
-		$this->notImpFinder($files);
+		$this->notImpFinder($files,$load["owner"], $load["repository"], $load["number"], $load["id"]);
 	}
 }
 

@@ -10,6 +10,7 @@ class checkRepo
 			chdir($mainDir . "/" . $repo);
 			shell_exec("git checkout master");
 			shell_exec("git pull");
+			chdir($mainDir);
 		}	
 		else
 		{
@@ -17,8 +18,7 @@ class checkRepo
 			{
 				shell_exec("rm -rf /" . $repo);
 			}
-			shell_exec("git clone git@github.com:" . $owner . "/" . $repository . ".git");
-			chdir($mainDir . "/" . $repo);
+			shell_exec("git clone git@github.com:" . $owner . "/" . $repo . ".git");
 		}	
 	}
 }

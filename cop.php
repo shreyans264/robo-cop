@@ -13,6 +13,9 @@ if(is_null($jsonpayload)) {
 }
 else {
 	$payload = json_decode($jsonpayload,true);
+	$dataGrab = new grabDataFromPayload();
+	$load = $dataGrab->getData($payload);
+
 	if(array_key_exists("pull_request", $payload))
 	{
 		switch($payload["action"])

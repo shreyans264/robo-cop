@@ -3,24 +3,8 @@ require(__DIR__ . '/../createComment.php');
 class linter
 {
 	private $comment = new createComment();
-	private function scanForFiles($string)
-	{
-		$fileList = array();
-		$findmeAfter="diff --git a/";
-		$findmeTill =" b/";
-		$pos = strpos($string, $findmeAfter);																																																																														
-		while($pos !== false)																																																														
-		{
-			$pos=$pos+13;
-			$endpos = strpos($string, $findmeTill,$pos);
-			$sub = substr($string,$pos,$endpos-$pos);
-			$sub=str_replace(" ","\ ", $sub);
-			array_push($fileList,$sub);
-			$pos = strpos($string, $findmeAfter,$endpos);
-		}
-		return $fileList;
-	}
-
+	
+	
 	private function updateLog($report, $fileName, $fileType, $owner, $repository, $number, $id) {
 		echo $report;
 
@@ -36,7 +20,7 @@ class linter
 						$lineNoPos += 9;
 						$lineNoEndPos = strpos($report, " ",$lineNoPos);
 						$lineNo = substr($report,$lineNoPos,$lineNoEndPos-$lineNoPos);
-						$this->comment->createComment($errorMsg,$lineNo,$fileName);
+						$this->comment->createComment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
 						$pos = strpos($report, "PHP Parse error:",$lineNoEndPos);
 					}
 				}
@@ -52,7 +36,7 @@ class linter
 						$errPos += 2;
 						$errEndPos = strpos($report, ".",$errPos);
 						$errorMsg = substr($report,$errPos,$errEndPos-$errPos);
-						$this->comment->createComment($errorMsg,$lineNo,$fileName);
+						$this->comment->createComment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
 						$pos = strpos($report, ".js: line ",$errEndPos);
 					}
 				}
@@ -64,34 +48,29 @@ class linter
 
 	}
 
-	public function scanErrors($load)
+	public function scanErrors($load,$groupedFiles)
 	{
-		$mainDir = getcwd();
-		$repository = $load["pull_request"]["head"]["repo"]["name"];
-		$owner = $load["pull_request"]["head"]["repo"]["owner"]["login"];
-		$branch = $load["pull_request"]["head"]["ref"];
-		$number = $load["number"];
-		$id = $load["pull_request"]["head"]["sha"];
-		shell_exec("git checkout " . $branch);
-		if($payload["action"] == "synchronize") 
-			$theDiff = shell_exec("git diff HEAD^ HEAD");
-		elseif($payload["action"] == "opened" || $payload["action"] == "reopened")
-			$theDiff = shell_exec("git diff master " . $branch);
-		$theList = $this->scanForFiles($theDiff);
-		foreach($theList as $x) {
-			if(substr($x,-3) == ".js") {
-				$errReport = shell_exec("jshint " . $x);
-				$this->updateLog($errReport, $x, "js",  $owner, $repository, $number, $id);
+		chdir(getcwd() . $load["repository"])
+		foreach($groupedFiles as $type => $files)
+		{
+			if($type == "js")
+			{
+				foreach($files as $file)
+				{
+					$errReport = shell_exec("jshint " . str_replace(" ","\ ",$file));
+					$this->updateLog($errReport, $file, "js",  $load["owner"], $load["repository"], $load["number"], $load["id"]);
+				}
 			}
-			/*elseif(substr($x, -4) == ".php") {
-				//echo "php file here \n";
-				$errReport = shell_exec("php -l " . $x);
-				updateLog($errReport, $x, "php",  $owner, $repository, $number, $id);
+			/*elseif($type == "php")
+			{
+				foreach($files as $file)
+				{
+					$errReport = shell_exec("php -l " . str_replace(" ","\ ",$file));
+					$this->updateLog($errReport, $x, "php",  $owner, $repository, $number, $id);
+				}
 			}*/
 
 		}
-		chdir($mainDir);
-		shell_exec("rm -rf " . $repository);
 
 	}
 
