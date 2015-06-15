@@ -1,13 +1,12 @@
 <?php
-require(__DIR__ . '/../createComment.php');
+require_once(__DIR__ . '/../createComment.php');
 class linter
 {
-	private $comment = new createComment();
 	
 	
 	private function updateLog($report, $fileName, $fileType, $owner, $repository, $number, $id) {
 		echo $report;
-
+		$comment = new createComment();
 		switch ($fileType) {
 			case "php":
 				$pos = strpos($report, "PHP Parse error:");
@@ -20,7 +19,7 @@ class linter
 						$lineNoPos += 9;
 						$lineNoEndPos = strpos($report, " ",$lineNoPos);
 						$lineNo = substr($report,$lineNoPos,$lineNoEndPos-$lineNoPos);
-						$this->comment->createComment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
+						$comment->Comment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
 						$pos = strpos($report, "PHP Parse error:",$lineNoEndPos);
 					}
 				}
@@ -36,7 +35,7 @@ class linter
 						$errPos += 2;
 						$errEndPos = strpos($report, ".",$errPos);
 						$errorMsg = substr($report,$errPos,$errEndPos-$errPos);
-						$this->comment->createComment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
+						$comment->Comment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
 						$pos = strpos($report, ".js: line ",$errEndPos);
 					}
 				}
@@ -50,14 +49,17 @@ class linter
 
 	public function scanErrors($load,$groupedFiles)
 	{
+		//echo "scanning Errors";
 		$mainDir = getcwd();
-		chdir(getcwd() . "/" .$load["repository"])
+		chdir(getcwd() . "/" .$load["repository"]);
+		shell_exec("git checkout " . $load["branch"]);
 		foreach($groupedFiles as $type => $files)
 		{
 			if($type == "js")
 			{
 				foreach($files as $file)
 				{
+					echo $file;
 					$errReport = shell_exec("jshint " . str_replace(" ","\ ",$file));
 					$this->updateLog($errReport, $file, "js",  $load["owner"], $load["repository"], $load["number"], $load["id"]);
 				}
@@ -72,6 +74,7 @@ class linter
 			}*/
 
 		}
+		shell_exec("git checkout master");
 		chdir($mainDir);
 	}
 

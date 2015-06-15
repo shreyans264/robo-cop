@@ -2,7 +2,7 @@
 
 class checkRepo
 {
-	public function checkRepo($owner,$repo)
+	public function chkRepo($owner,$repo)
 	{
 		$mainDir=getcwd();
 		if(is_dir($mainDir . "/" . $repo) and is_dir($mainDir . "/" . $repo . "/.git"))

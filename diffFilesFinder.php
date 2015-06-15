@@ -10,19 +10,19 @@ class diffFilesFinder
 				"html"=>array()
 			);
 		foreach($files as $file) {
-			if(substr($x,-3) == ".js")
+			if(substr($file,-3) == ".js")
 			{
 				array_push($groupedFiles["js"],$file);
 			}
-			elseif(substr($x, -4) == ".css")
+			elseif(substr($file, -4) == ".css")
 			{
 				array_push($groupedFiles["css"],$file);
 			}
-			elseif(substr($x, -4) == ".php")
+			elseif(substr($file, -4) == ".php")
 			{
 				array_push($groupedFiles["php"],$file);
 			}
-			elseif(substr($x, -5) == ".html")
+			elseif(substr($file, -5) == ".html")
 			{
 				array_push($groupedFiles["html"],$file);
 			}
@@ -46,18 +46,18 @@ class diffFilesFinder
 		return $fileList;
 	}
 
-	public getFilesList($payload)
+	public function getFilesList($payload)
 	{
 		if($payload["event_type"] == "pull_request")
 		{
 			$mainDir = getcwd();
 			chdir($mainDir . "/" . $payload["repository"]);
-			shell_exec("git checkout " . $branch);
+			shell_exec("git checkout " . $payload["branch"]);
 			if($payload["action"] == "synchronize"){
 				$theDiff = shell_exec("git diff HEAD^ HEAD");
 			}
 			elseif($payload["action"] == "opened" || $payload["action"] == "reopened"){
-				$theDiff = shell_exec("git diff master " . $branch);
+				$theDiff = shell_exec("git diff master " . $payload["branch"]);
 			}
 			else{
 				$theDiff = "";

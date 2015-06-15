@@ -4,8 +4,10 @@ require(__DIR__ . '/grabDataFromPayload.php');
 require(__DIR__ . '/Tasks/linter.php');
 require(__DIR__ . '/Tasks/cssChecker.php');
 require(__DIR__ . '/Events/forcePushMaster.php');
-require(__DIR__ . '/Tasks/mergeIntoMaster.php');
+require(__DIR__ . '/diffFilesFinder.php');
+//require(__DIR__ . '/Tasks/mergeIntoMaster.php');
 
+echo "ROBOCOP";
 $jsonpayload = $_POST["payload"];
 
 if(is_null($jsonpayload)) {
@@ -18,8 +20,9 @@ else {
 	if($load["event_type"]!="none")
 	{
 		$checkRepo = new checkRepo();
-		$checkRepo->checkRepo($load["owner"],$load["repository"]);
-		
+		$checkRepo->chkRepo($load["owner"],$load["repository"]);
+		$diffFilesFinder = new diffFilesFinder();
+		$diffFiles = $diffFilesFinder->getFilesList($load);	
 
 	}
 	switch($load["event_type"])
@@ -30,8 +33,7 @@ else {
 				case "opened":
 				case "reopened":
 				case "synchronize":
-					$diffFilesFinder = new diffFilesFinder();
-					$diffFiles = $diffFilesFinder->getFilesList($load);
+					
 					$cssChecker = new cssChecker();
 					$cssChecker->cssCheck($diffFiles["css"],$load);
 					$linter = new linter();
@@ -55,8 +57,8 @@ else {
 				$forced->findEnforcer($load);
 				//foreced push into masters
 			}
-			$diffFilesFinder = new diffFilesFinder();
-			$diffFiles = $diffFilesFinder->getFilesList($load);
+			//$diffFilesFinder = new diffFilesFinder();
+			//$diffFiles = $diffFilesFinder->getFilesList($load);
 			//scanErrors($payload);
 			break;
 		case "none":

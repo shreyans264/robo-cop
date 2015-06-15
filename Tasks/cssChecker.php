@@ -1,11 +1,12 @@
 <?php
-require(__DIR__ . '/../createComment.php');
+require_once(__DIR__ . '/../createComment.php');
 
 class cssChecker
 {
-	private $comment = new createComment();
+
 	private function notImpFinder($files,$owner,$repository,$number,$id)
 	{
+		$comment = new createComment();
 		foreach($files as $file)
 		{
 			$handle = fopen($file, "r");
@@ -18,8 +19,8 @@ class cssChecker
 			    	if(strpos($line,"!important"))
 			    	{
 			    		echo $lineNo;
-			    		echo "\n";
-			    		$this->comment->createComment("Try to avoid !important",$lineNo,$file, $owner, $repository, $number, $id);
+			    		echo "\n";   		
+			    		$comment->Comment("Try to avoid !important",$lineNo,$file, $owner, $repository, $number, $id);
 			    	}
 			    }
 			    fclose($handle);
