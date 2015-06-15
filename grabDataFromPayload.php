@@ -11,7 +11,7 @@ class grabDataFromPayload
 			"number" = $load["number"],
 			"id" = $load["pull_request"]["head"]["sha"],
 			"action" = $load["action"],
-			"committer" = $load["commits"]["commiter"]
+			"merged" = $load["pull_request"]["merged"]
 			);
 
 	}
@@ -21,13 +21,18 @@ class grabDataFromPayload
 			"event_type" = "push",
 			"repository" = $load["repository"]["name"],
 			"owner" = $load["repository"]["owner"]["name"],
+			"owner_email" = $load["repository"]["owner"]["email"],
 			"branch" = substr($load["ref"], 11),
 			"forced" = $load["forced"],
 			"id" = $load["after"],
 			"prevId" = $load["before"],
 			"added" = $load["head_commit"]["added"],
 			"removed" = $load["head_commit"]["removed"],
-			"modified" = $load["head_commit"]["modified"]
+			"modified" = $load["head_commit"]["modified"],
+			"author" = $load["head_commit"]["author"]["name"],
+			"author_email" = $load["head_commit"]["author"]["email"],
+			"committer" = $load["head_commit"]["comitter"]["name"],
+			"committer_email" = $load["head_commit"]["comitter"]["email"]
 			);
 	}
 

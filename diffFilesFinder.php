@@ -12,19 +12,19 @@ class diffFilesFinder
 		foreach($files as $file) {
 			if(substr($x,-3) == ".js")
 			{
-				array_push($groupedFiles[""],$file);
+				array_push($groupedFiles["js"],$file);
 			}
 			elseif(substr($x, -4) == ".css")
 			{
-				array_push($groupedFiles[""],$file);
+				array_push($groupedFiles["css"],$file);
 			}
 			elseif(substr($x, -4) == ".php")
 			{
-				array_push($groupedFiles[""],$file);
+				array_push($groupedFiles["php"],$file);
 			}
 			elseif(substr($x, -5) == ".html")
 			{
-				array_push($groupedFiles[""],$file);
+				array_push($groupedFiles["html"],$file);
 			}
 		}
 		return $groupedFiles;
@@ -45,6 +45,7 @@ class diffFilesFinder
 		}
 		return $fileList;
 	}
+
 	public getFilesList($payload)
 	{
 		if($payload["event_type"] == "pull_request")

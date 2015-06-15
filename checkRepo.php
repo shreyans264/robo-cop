@@ -16,7 +16,7 @@ class checkRepo
 		{
 			if(is_dir($mainDir . "/" . $repo))
 			{
-				shell_exec("rm -rf /" . $repo);
+				shell_exec("rm -rf " . $repo);
 			}
 			shell_exec("git clone git@github.com:" . $owner . "/" . $repo . ".git");
 		}	

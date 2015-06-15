@@ -50,7 +50,8 @@ class linter
 
 	public function scanErrors($load,$groupedFiles)
 	{
-		chdir(getcwd() . $load["repository"])
+		$mainDir = getcwd();
+		chdir(getcwd() . "/" .$load["repository"])
 		foreach($groupedFiles as $type => $files)
 		{
 			if($type == "js")
@@ -71,7 +72,7 @@ class linter
 			}*/
 
 		}
-
+		chdir($mainDir);
 	}
 
 

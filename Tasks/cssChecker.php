@@ -4,7 +4,7 @@ require(__DIR__ . '/../createComment.php');
 class cssChecker
 {
 	private $comment = new createComment();
-	private function notImpFinder($files)
+	private function notImpFinder($files,$owner,$repository,$number,$id)
 	{
 		foreach($files as $file)
 		{
@@ -33,7 +33,10 @@ class cssChecker
 
 	public function cssCheck($files,$load) 
 	{
+		$mainDir = getcwd();
+		chdir($mainDir . "/" . $load["repository"]);
 		$this->notImpFinder($files,$load["owner"], $load["repository"], $load["number"], $load["id"]);
+		chdir($mainDir);
 	}
 }
 

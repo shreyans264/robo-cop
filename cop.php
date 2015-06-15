@@ -15,36 +15,56 @@ else {
 	$payload = json_decode($jsonpayload,true);
 	$dataGrab = new grabDataFromPayload();
 	$load = $dataGrab->getData($payload);
-
-	if(array_key_exists("pull_request", $payload))
+	if($load["event_type"]!="none")
 	{
-		switch($payload["action"])
-		{
-			case "opened":
-			case "reopened":
-			case "synchronize":
-				//scanErrors($payload);
-				//cssCheck($files,$load);
-				break;
-			case "closed":
-				if($payload["pull_request"]["merged"])
-				{
-					//pull_request merged with masters
-				}
-				break;
-
-		}
-	}
-	elseif(array_key_exists("commits", $payload))
-	{
-		if($payload["forced"] == true)
-		{
-			//foreced push into masters
-		}
-		//scanErrors($payload);
-
+		$checkRepo = new checkRepo();
+		$checkRepo->checkRepo($load["owner"],$load["repository"]);
+		
 
 	}
+	switch($load["event_type"])
+	{
+		case "pull_request":
+			switch($load["action"])
+			{
+				case "opened":
+				case "reopened":
+				case "synchronize":
+					$diffFilesFinder = new diffFilesFinder();
+					$diffFiles = $diffFilesFinder->getFilesList($load);
+					$cssChecker = new cssChecker();
+					$cssChecker->cssCheck($diffFiles["css"],$load);
+					$linter = new linter();
+					$linter->scanErrors($load,$diffFiles);
+					//scanErrors($payload);
+					break;
+				case "closed":
+					if($load["merged"])
+					{
+						//pull_request merged with masters
+					}
+					break;
+
+			}
+			break;
+	
+		case "push":
+			if($load["forced"] == true)
+			{
+				$forced = new forcedPushed();
+				$forced->findEnforcer($load);
+				//foreced push into masters
+			}
+			$diffFilesFinder = new diffFilesFinder();
+			$diffFiles = $diffFilesFinder->getFilesList($load);
+			//scanErrors($payload);
+			break;
+		case "none":
+			echo "invalid Request\n";
+			break;
+
+	}
+
 	
 }
 
