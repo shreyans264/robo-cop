@@ -16,17 +16,24 @@ used github-php-client
 
 *[11/06/2015]webhook grabbing payload functionality added not tested
 
-*[15/06/2015]
+*[15/06/2015]tested and linked
 
 REQUIRED
+
 >PHP
 
 >git
 
+( On terminal type command : sudo apt-get install git )
+
 >jshint
+
+( Install node.js and then type the command : npm install -g jshint )
+
 
 
 Instructions
+
 >add username and password in gitDiff.php file in createComment function
 
 >create a public access to this service
