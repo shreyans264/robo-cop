@@ -18,6 +18,8 @@ used github-php-client
 
 *[15/06/2015]tested and linked
 
+*[16/06/2015]all repositories are cloned in repo folder
+
 REQUIRED
 
 >PHP
