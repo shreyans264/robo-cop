@@ -23,12 +23,13 @@ REQUIRED
 >PHP
 
 >git
-
 ( On terminal type command : sudo apt-get install git )
 
 >jshint
-
 ( Install node.js and then type the command : npm install -g jshint )
+
+>php-client-api
+(download composer.phar in directory and type command : php composer.phar install )
 
 
 
