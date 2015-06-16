@@ -34,15 +34,17 @@ REQUIRED
 
 Instructions
 
->add username and password in gitDiff.php file in createComment function
+>rename config.php.sample to config.php
 
->create a public access to this service
+>add username and password in config.php file
+
+>create a public access to this service(you can use tools like ngrok for that)
 
 >in github got to the repository to add hook
 
 >goto settings-->Webhooks & Services-->click on Add Webhook
 
->enter the URL to the webhook file gitDiff.php in Payload URL
+>enter the URL to the webhook file cop.php in Payload URL
 
 >set content type to application/x-www-form-urlencoded
 

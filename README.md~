@@ -27,6 +27,7 @@ REQUIRED
 ( On terminal type command : sudo apt-get install git )
 
 >jshint
+
 ( Install node.js and then type the command : npm install -g jshint )
 
 
