@@ -31,8 +31,8 @@ class grabDataFromPayload
 			"modified" => $load["head_commit"]["modified"],
 			"author" => $load["head_commit"]["author"]["name"],
 			"author_email" => $load["head_commit"]["author"]["email"],
-			"committer" => $load["head_commit"]["comitter"]["name"],
-			"committer_email" => $load["head_commit"]["comitter"]["email"]
+			"committer" => $load["head_commit"]["committer"]["name"],
+			"committer_email" => $load["head_commit"]["committer"]["email"]
 			);
 	}
 
