@@ -7,7 +7,7 @@ Robo-cop a bot that guards your github repositories
 scans the DIFF files on pull_request and comments on the problems if present.
 currently scans the js files for syntax errors.
 
-Data to be inheritted from webhooks payload
+Data to be fetched from webhooks payload
 
 
 used github-php-client
@@ -16,6 +16,7 @@ used github-php-client
 
 *[11/06/2015]webhook grabbing payload functionality added not tested
 
+*[15/06/2015]
 
 REQUIRED
 >PHP
