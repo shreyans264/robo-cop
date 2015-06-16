@@ -1,9 +1,0 @@
-{
-  "name": "shreyans264/robo-cop",
-  "description": "PHP bot that safegaurds your github repositories.",
-  "license": "proprietary",
-  "require": {
-	"php": ">=5.3.3",
-	"tan-tan-kanarek/github-php-client" : "dev-master@dev"
-  }
-}
