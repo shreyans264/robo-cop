@@ -35,7 +35,7 @@ class cssChecker
 	public function cssCheck($files,$load) 
 	{
 		$mainDir = getcwd();
-		chdir($mainDir . "/" . $load["repository"]);
+		chdir($mainDir . "/repo/" . $load["repository"]);
 		$this->notImpFinder($files,$load["owner"], $load["repository"], $load["number"], $load["id"]);
 		chdir($mainDir);
 	}

@@ -51,7 +51,7 @@ class diffFilesFinder
 		if($payload["event_type"] == "pull_request")
 		{
 			$mainDir = getcwd();
-			chdir($mainDir . "/" . $payload["repository"]);
+			chdir($mainDir . "/repo/" . $payload["repository"]);
 			shell_exec("git checkout " . $payload["branch"]);
 			if($payload["action"] == "synchronize"){
 				$theDiff = shell_exec("git diff HEAD^ HEAD");

@@ -51,7 +51,7 @@ class linter
 	{
 		//echo "scanning Errors";
 		$mainDir = getcwd();
-		chdir(getcwd() . "/" .$load["repository"]);
+		chdir($mainDir . "/repo/" .$load["repository"]);
 		shell_exec("git checkout " . $load["branch"]);
 		foreach($groupedFiles as $type => $files)
 		{
