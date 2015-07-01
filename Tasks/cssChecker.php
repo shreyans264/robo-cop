@@ -20,9 +20,7 @@ class cssChecker
 			    	{
 			    		echo $lineNo;
 			    		echo "\n"; 
-			    		if(intval($lineNo)-$file[1]>0) {
-				    		$comment->Comment("Try to avoid !important",intval($lineNo)-$file[1],$file[0], $owner, $repository, $number, $id);
-			    		}
+				    		$comment->Comment("Try to avoid !important",$lineNo,$file, $owner, $repository, $number, $id);
 			    	}
 			    }
 			    fclose($handle);
