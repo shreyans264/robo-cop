@@ -9,7 +9,7 @@ class cssChecker
 		$comment = new createComment();
 		foreach($files as $file)
 		{
-			$handle = fopen($file, "r");
+			$handle = fopen($file[0], "r");
 			if ($handle)
 			{
 				$lineNo = 0;
@@ -19,8 +19,10 @@ class cssChecker
 			    	if(strpos($line,"!important"))
 			    	{
 			    		echo $lineNo;
-			    		echo "\n";   		
-			    		$comment->Comment("Try to avoid !important",$lineNo,$file, $owner, $repository, $number, $id);
+			    		echo "\n"; 
+			    		if(intval($lineNo)-$file[1]>0) {
+				    		$comment->Comment("Try to avoid !important",intval($lineNo)-$file[1],$file[0], $owner, $repository, $number, $id);
+			    		}
 			    	}
 			    }
 			    fclose($handle);

@@ -9,7 +9,7 @@ class createComment
 		$filename = str_replace("\ "," ", $filename);
 		$client = new GitHubClient();
 		$client->setCredentials($config["username"], $config["password"]);
-		$commentTry = $client->pulls->comments->createComment($owner, $repository, $number, $msg, intval($line), $id, $filename);
+			$commentTry = $client->pulls->comments->createComment($owner, $repository, $number, $msg, intval($line), $id, $filename);
 
 	}
 }

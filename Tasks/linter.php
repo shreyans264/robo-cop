@@ -19,7 +19,9 @@ class linter
 						$lineNoPos += 9;
 						$lineNoEndPos = strpos($report, " ",$lineNoPos);
 						$lineNo = substr($report,$lineNoPos,$lineNoEndPos-$lineNoPos);
-						$comment->Comment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
+						if(intval($lineNo)-$fileName[1]>0) {
+							$comment->Comment($errorMsg,intval($lineNo)-$fileName[1],$fileName[0],$owner,$repository,$number,$id);
+						}
 						$pos = strpos($report, "PHP Parse error:",$lineNoEndPos);
 					}
 				}
@@ -35,7 +37,9 @@ class linter
 						$errPos += 2;
 						$errEndPos = strpos($report, ".",$errPos);
 						$errorMsg = substr($report,$errPos,$errEndPos-$errPos);
-						$comment->Comment($errorMsg,$lineNo,$fileName,$owner,$repository,$number,$id);
+						if(intval($lineNo)-$fileName[1]>0) {
+							$comment->Comment($errorMsg,intval($lineNo)-$fileName[1],$fileName[0],$owner,$repository,$number,$id);
+						}
 						$pos = strpos($report, ".js: line ",$errEndPos);
 					}
 				}
@@ -60,7 +64,7 @@ class linter
 				foreach($files as $file)
 				{
 					echo $file;
-					$errReport = shell_exec("jshint " . str_replace(" ","\ ",$file));
+					$errReport = shell_exec("jshint " . str_replace(" ","\ ",$file[0]));
 					$this->updateLog($errReport, $file, "js",  $load["owner"], $load["repository"], $load["number"], $load["id"]);
 				}
 			}
