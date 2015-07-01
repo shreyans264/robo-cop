@@ -5,6 +5,7 @@ require(__DIR__ . '/Tasks/linter.php');
 require(__DIR__ . '/Tasks/cssChecker.php');
 require(__DIR__ . '/Events/forcePushMaster.php');
 require(__DIR__ . '/diffFilesFinder.php');
+require(__DIR__ . '/Tasks/lineLengthChecker.php');
 //require(__DIR__ . '/Tasks/mergeIntoMaster.php');
 
 echo "ROBOCOP";
@@ -33,7 +34,10 @@ else {
 				case "opened":
 				case "reopened":
 				case "synchronize":
-					
+					$lineLengthChecker = new lineLengthChecker();
+					foreach ($diffFiles as $key => $value) {
+						$lineLengthChecker->lineLengthCheck($value,$load);
+					}
 					$cssChecker = new cssChecker();
 					$cssChecker->cssCheck($diffFiles["css"],$load);
 					$linter = new linter();

@@ -1,10 +1,10 @@
 <?php
 require_once(__DIR__ . '/../createComment.php');
 
-class cssChecker
+class lineLengthChecker
 {
 
-	private function notImpFinder($files,$owner,$repository,$number,$id)
+	private function longLineFinder($files,$owner,$repository,$number,$id)
 	{
 		$comment = new createComment();
 		foreach($files as $file)
@@ -17,11 +17,11 @@ class cssChecker
 			    while (($line = fgets($handle)) !== false)
 			    {
 			    	$lineNo+=1;
-			    	if(strpos($line,"!important"))
+			    	if(strlen($line)>80)
 			    	{
 			    		echo $lineNo;
 			    		echo "\n"; 
-				    		$comment->Comment("Try to avoid !important",$lineNo,$file, $owner, $repository, $number, $id);
+				    		$comment->Comment("Please do not exceed 80 chars per line.",$lineNo,$file, $owner, $repository, $number, $id);
 			    	}
 			    }
 			    fclose($handle);
@@ -33,11 +33,11 @@ class cssChecker
 		}
 	}
 
-	public function cssCheck($files,$load) 
+	public function lineLengthCheck($files,$load) 
 	{
 		$mainDir = getcwd();
 		chdir($mainDir . "/repo/" . $load["repository"]);
-		$this->notImpFinder($files,$load["owner"], $load["repository"], $load["number"], $load["id"]);
+		$this->longLineFinder($files,$load["owner"], $load["repository"], $load["number"], $load["id"]);
 		chdir($mainDir);
 	}
 }

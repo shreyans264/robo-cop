@@ -10,25 +10,35 @@ class diffFilesFinder
 				"html"=>array()
 			);
 		foreach($files as $file) {
-			if(substr($file,-3) == ".js")
+			if(substr($file[0],-3) == ".js")
 			{
 				array_push($groupedFiles["js"],$file);
 			}
-			elseif(substr($file, -4) == ".css")
+			elseif(substr($file[0], -4) == ".css")
 			{
 				array_push($groupedFiles["css"],$file);
 			}
-			elseif(substr($file, -4) == ".php")
+			elseif(substr($file[0], -4) == ".php")
 			{
 				array_push($groupedFiles["php"],$file);
 			}
-			elseif(substr($file, -5) == ".html")
+			elseif(substr($file[0], -5) == ".html")
 			{
 				array_push($groupedFiles["html"],$file);
 			}
 		}
 		return $groupedFiles;
 	}
+	private function findline($string,$from)
+	{
+		$findmeAfter="@@ -";
+		$findmeTill=",";
+		$pos = strpos($string, $findmeAfter,$from);
+		$endpos = strpos($string, $findmeTill,$pos);
+		$sub = substr($string,$pos,$endpos-$pos);
+		return abs(intval($sub));
+	}
+
 	private function scanForFiles($string)
 	{
 		$fileList = array();
@@ -40,7 +50,8 @@ class diffFilesFinder
 			$pos=$pos+13;
 			$endpos = strpos($string, $findmeTill,$pos);
 			$sub = substr($string,$pos,$endpos-$pos);
-			array_push($fileList,$sub);
+
+			array_push($fileList,[$sub,$this->findline($string,$endpos)]);
 			$pos = strpos($string, $findmeAfter,$endpos);
 		}
 		return $fileList;
@@ -62,7 +73,7 @@ class diffFilesFinder
 			else{
 				$theDiff = "";
 			}
-			shell_exec("git checkout master");
+			//shell_exec("git checkout master");
 			chdir($mainDir);
 			$theList = $this->scanForFiles($theDiff);
 
