@@ -59,7 +59,7 @@ class linter
 			{
 				foreach($files as $file)
 				{
-					echo $file;
+					echo $file[0];
 					$errReport = shell_exec("jshint " . str_replace(" ","\ ",$file[0]));
 					$this->updateLog($errReport, $file, "js",  $load["owner"], $load["repository"], $load["number"], $load["id"]);
 				}

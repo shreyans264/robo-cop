@@ -3,7 +3,7 @@ class createComment
 {
 	public function Comment($msg, $line, $filename, $owner, $repository, $number, $id) {
 	
-		echo $msg . " : " . $line . " : " . $filename;
+		echo $msg . " : " . $line . " : " . $filename[0];
 		if(intval($line)-$filename[1]>0) {
 			require_once(__DIR__ . '/vendor/tan-tan-kanarek/github-php-client/client/GitHubClient.php');
 			$config = include "config.php";	
