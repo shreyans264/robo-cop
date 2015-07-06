@@ -6,7 +6,7 @@ require(__DIR__ . '/Tasks/cssChecker.php');
 require(__DIR__ . '/Events/forcePushMaster.php');
 require(__DIR__ . '/diffFilesFinder.php');
 require(__DIR__ . '/Tasks/lineLengthChecker.php');
-//require(__DIR__ . '/Tasks/mergeIntoMaster.php');
+
 
 echo "ROBOCOP";
 $jsonpayload = $_POST["payload"];
@@ -21,7 +21,7 @@ else {
 	if($load["event_type"]!="none")
 	{
 		$checkRepo = new checkRepo();
-		$checkRepo->chkRepo($load["owner"],$load["repository"]);
+		$checkRepo->chkRepo($load["owner"],$load["repository"],$load["branch"]);
 		$diffFilesFinder = new diffFilesFinder();
 		$diffFiles = $diffFilesFinder->getFilesList($load);	
 
@@ -34,6 +34,8 @@ else {
 				case "opened":
 				case "reopened":
 				case "synchronize":
+					// Tasks for robo-cop for checking and reviewing code
+
 					$lineLengthChecker = new lineLengthChecker();
 					foreach ($diffFiles as $key => $value) {
 						$lineLengthChecker->lineLengthCheck($value,$load);
@@ -42,7 +44,6 @@ else {
 					$cssChecker->cssCheck($diffFiles["css"],$load);
 					$linter = new linter();
 					$linter->scanErrors($load,$diffFiles);
-					//scanErrors($payload);
 					break;
 				case "closed":
 					if($load["merged"])
@@ -61,9 +62,6 @@ else {
 				$forced->findEnforcer($load);
 				//foreced push into masters
 			}
-			//$diffFilesFinder = new diffFilesFinder();
-			//$diffFiles = $diffFilesFinder->getFilesList($load);
-			//scanErrors($payload);
 			break;
 		case "none":
 			echo "invalid Request\n";

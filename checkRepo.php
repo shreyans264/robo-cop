@@ -2,7 +2,7 @@
 
 class checkRepo
 {
-	public function chkRepo($owner,$repo)
+	public function chkRepo($owner,$repo,$branch)
 	{
 		$mainDir=getcwd();
 		if(!is_dir($mainDir . "/repo"))
@@ -25,6 +25,11 @@ class checkRepo
 			shell_exec("git clone git@github.com:" . $owner . "/" . $repo . ".git");
 		}
 		chdir($mainDir);
+		
+		chdir($mainDir . "/repo/" . $repo);
+		shell_exec("git checkout ".$branch);
+		shell_exec("git pull");
+		chdir($mainDir);		
 	}
 }
 

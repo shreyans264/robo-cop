@@ -73,7 +73,6 @@ class diffFilesFinder
 			else{
 				$theDiff = "";
 			}
-			//shell_exec("git checkout master");
 			chdir($mainDir);
 			$theList = $this->scanForFiles($theDiff);
 
