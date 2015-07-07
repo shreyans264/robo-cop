@@ -21,9 +21,9 @@ else {
 	if($load["event_type"]!="none")
 	{
 		$checkRepo = new checkRepo();
-		$checkRepo->chkRepo($load["owner"],$load["repository"],$load["branch"]);
+		$checkRepo->chkRepo($load["owner"],$load["repository"],$load["number"]);
 		$diffFilesFinder = new diffFilesFinder();
-		$diffFiles = $diffFilesFinder->getFilesList($load);	
+		$diffFiles = $diffFilesFinder->getFilesList($load["owner"],$load["repository"],$load["number"]);	
 
 	}
 	switch($load["event_type"])

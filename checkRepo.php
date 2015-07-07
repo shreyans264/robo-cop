@@ -2,34 +2,35 @@
 
 class checkRepo
 {
-	public function chkRepo($owner,$repo,$branch)
+	public function chkRepo($owner,$repo,$number)
 	{
 		$mainDir=getcwd();
 		if(!is_dir($mainDir . "/repo"))
 		{
 			shell_exec("mkdir repo");
 		}
-		if(is_dir($mainDir . "/repo/" . $repo) and is_dir($mainDir . "/repo/" . $repo . "/.git"))
+		chdir($mainDir . "/repo");
+
+		if(!is_dir($mainDir . "/repo/" . $owner))
 		{
-			chdir($mainDir . "/repo/" . $repo);
-			shell_exec("git checkout master");
-			shell_exec("git pull");
-		}	
-		else
-		{
-			chdir($mainDir . "/repo");
-			if(is_dir($mainDir . "/repo/" . $repo))
-			{
-				shell_exec("rm -rf " . $repo);
-			}
-			shell_exec("git clone git@github.com:" . $owner . "/" . $repo . ".git");
+			shell_exec("mkdir " . $owner);
 		}
-		chdir($mainDir);
-		
+		chdir($mainDir . "/repo/" . $owner);
+
+		if(!is_dir($mainDir . "/repo/" . $repo))
+		{
+			shell_exec("mkdir " . $repo);
+		}
 		chdir($mainDir . "/repo/" . $repo);
-		shell_exec("git checkout ".$branch);
-		shell_exec("git pull");
-		chdir($mainDir);		
+		
+		if(is_dir($mainDir . "/repo/" . $repo . "/".$number)) 
+		{
+			shell_exec("rm -rf " . $number);
+		}
+
+		shell_exec("mkdir ". $number);
+		
+		chdir($mainDir);
 	}
 }
 
